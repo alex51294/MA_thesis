@@ -1,0 +1,48 @@
+data:
+  crop_size: null
+  dataset_type: DDSM
+  detection_only: true
+  label_type: null
+  half_precision: false
+  img_shape: [1300, 650]
+  shape_limit: null
+  type: mass
+  level: images
+  mode: lazy
+  margin: 0.1
+  ext_aug: True
+  norm: true
+  seed: 42
+  segment: false
+
+debug:
+  n_train: 20
+  n_val: 10
+
+checkpoint_path:
+  path: "/home/temp/moriz/checkpoints/retinanet/test/"
+
+logging:
+  name: "test"
+  port: 9999
+  server: 'http://pc87'
+
+model:
+  in_channels: 1
+  n_outputs: 1
+  pretrain: true
+  #multistage: true
+  #model_checkpoint: "/home/temp/moriz/data/weights/models/RN18_1200x1200_lr_1e-5_bs_4.pth"
+  resnet: RN18
+
+optimizer:
+  optimizer_params:
+    lr: 0.00001
+
+training:
+  batch_size: 1
+  num_epochs: 50
+
+kfold:
+  enable: false
+  splits: 5

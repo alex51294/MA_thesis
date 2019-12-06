@@ -1,0 +1,110 @@
+######################################################################
+# Readme
+######################################################################
+# Execute this job:
+#   - connect to `nic` via ssh: `ssh username@nic` (enter passwd)
+#   - start job: `condor_submit /path/to/this/file.tbi`
+#
+# Monitor jobs:
+#   - see machines: `condor_status`
+#   - see queue: `condor_q`
+#   - keep monitoring queue: `watch condor_q` (quit with ctrl + c)
+#
+# Find out more at:
+# http://www.iac.es/sieinvens/siepedia/pmwiki.php?n=HOWTOs.CondorHowTo
+######################################################################
+
+
+######################################################################
+# Necessary parameters
+######################################################################
+
+# Shell script that you want to execute
+cmd = /home/students/moriz/MA_Moriz/scripts/start_training.sh
+
+# command line arguments
+#args =
+
+# start directory
+initialdir = /home/temp/moriz/logs
+
+# define output, error and log file
+output = /home/temp/moriz/logs/loc_$(cluster).$(Process)_out.log
+error = /home/temp/moriz/logs/loc_$(cluster).$(Process)_err.log
+log = /home/temp/moriz/logs/loc_$(cluster).$(Process)_log.log
+
+# working environments
+getenv        = True
+environment   = "working_dir=/home/students/moriz/ data_dir=/home/temp/moriz/data/"
+
+
+######################################################################
+# Optional parameters
+######################################################################
+
+
+# Choose if job should run on cluster or workstation node. If unset job will
+# run on eachy available node. Options are "cluster" or "workstations"
+# requirements = POOL =="cluster"
+#
+# request a certain machine
+# requirements = TARGET.Machine=="pc34.lfb.rwth-aachen.de"
+#
+# required GPU RAM (MB)
+# requirements = (GPURAM > 8000)
+#
+# Attention: You can only set one requirement line. Add more requirements by using && e.g.
+#
+# requirements = (GPURAM > 8000) && POOL =="cluster"
+# requirements = (GPURAM > 8000) && TARGET.Machine=="maxwell.lfb.rwth-aachen.de""
+
+
+requirements = (GPURAM > 11000) && POOL =="cluster" && CUDADeviceName != "GeForce RTX 2080 Ti"
+#requirements = (GPURAM > 6000) && POOL =="workstations"
+#requirements = (GPURAM > 7000) && CUDADeviceName != "GeForce RTX 2080 Ti"
+
+
+# required number of CPU cores
+request_cpus = 2
+
+# required number of GPUs
+request_gpus = 1
+
+# required CPU RAM
+request_memory = 24 GB
+
+# criterion after which to choose the machine
+# e.g. `rank = memory` takes machine with larges RAM
+# rank = memory
+
+# number of seconds to wait before executing job
+# deferral_time = (CurrentTime + 1)
+
+# nice user?
+nice_user = True
+
+######################################################################
+# Further preferences
+######################################################################
+
+# sync logfile to logfiles instead of copying them after finishing
+stream_error = true
+stream_output = true
+should_transfer_files = IF_NEEDED
+
+# run with user's account
+run_as_owner = True
+load_profile = True
+
+# send email notifications (Always|Error|Complete|Never)
+notify_user   = alexander.moriz@lfb.rwth-aachen.de
+notification  = Always
+
+# number of executions of this job
+#queue 1
+
+# if you want to use a range of arguments,
+# you can add them like this, one set of argumetns per line
+queue 1 arguments from (
+-b 48
+)
